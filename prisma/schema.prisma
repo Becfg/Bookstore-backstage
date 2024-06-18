@@ -1,0 +1,86 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model staff {
+  id          Int    @id @default(autoincrement())
+  name        String
+  job         job    @relation(fields: [jobId], references: [id])
+  jobId       Int
+  phoneNumber String @unique @db.VarChar(15)
+  passwd      String @db.VarChar(32)
+}
+
+model job {
+  id      Int     @id @default(autoincrement())
+  jobName String  @unique
+  staff   staff[]
+}
+
+model category {
+  id   Int    @id @default(autoincrement())
+  name String @unique
+  book book[]
+}
+
+model book {
+  id              Int               @id @default(autoincrement())
+  name            String            @unique
+  author          String
+  publisher       String
+  ISBN            String            @db.VarChar(13)
+  category        category          @relation(fields: [categoryId], references: [id])
+  categoryId      Int
+  version         String
+  price           Decimal           @db.Decimal(10, 2)
+  salesDetail     salesDetail[]
+  purchaseDetails purchaseDetails[]
+}
+
+model sale {
+  id             Int           @id @default(autoincrement())
+  date           DateTime      @default(now())
+  theTotalAmount Decimal       @db.Decimal(10, 2)
+  salesDetail    salesDetail[]
+}
+
+model salesDetail {
+  id       Int     @id @default(autoincrement())
+  sale     sale    @relation(fields: [saleId], references: [id])
+  saleId   Int
+  book     book    @relation(fields: [bookId], references: [id])
+  bookId   Int
+  quantity Int
+  price    Decimal @db.Decimal(10, 2)
+}
+
+model vendor {
+  id            Int        @id @default(autoincrement())
+  name          String     @unique
+  contact       String
+  contactNumber String     @db.VarChar(15)
+  email         String
+  purchase      purchase[]
+}
+
+model purchase {
+  id              Int               @id @default(autoincrement())
+  vendor          vendor            @relation(fields: [vendorId], references: [id])
+  vendorId        Int
+  purchaseDetails purchaseDetails[]
+}
+
+model purchaseDetails {
+  id         Int      @id @default(autoincrement())
+  purchase   purchase @relation(fields: [purchaseId], references: [id])
+  purchaseId Int
+  book       book     @relation(fields: [bookId], references: [id])
+  bookId     Int
+  quantity   Int
+  price      Decimal  @db.Decimal(10, 2)
+}
