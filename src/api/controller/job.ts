@@ -1,4 +1,4 @@
-import {PrismaClient, Prisma} from '@prisma/client'
+import {PrismaClient} from '@prisma/client'
 
 import {common} from "../../type/common";
 import controller = common.controller;
@@ -15,9 +15,9 @@ const job: controller = {
 	addJob: async (req, res) => {
 		try {
 			const addJob = await prisma.job.create({data: req.body})
-			res.status(201).send(addJob)
+			res.send(addJob)
 		} catch (e) {
-			res.send(e)
+			res.status(400).send(e)
 		}
 	},
 	deleteJob: async (req, res) => {
@@ -30,7 +30,7 @@ const job: controller = {
 			})
 			res.send(delJob)
 		} catch (e) {
-			res.send(e)
+			res.status(400).send(e)
 		}
 	}
 }

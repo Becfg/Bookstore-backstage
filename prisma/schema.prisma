@@ -7,27 +7,35 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// 员工
 model staff {
-  id          Int    @id @default(autoincrement())
-  name        String
-  job         job    @relation(fields: [jobId], references: [id])
-  jobId       Int
-  phoneNumber String @unique @db.VarChar(15)
-  passwd      String @db.VarChar(32)
+  id              Int               @id @default(autoincrement())
+  name            String
+  job             job               @relation(fields: [jobId], references: [id])
+  jobId           Int
+  phoneNumber     String            @unique @db.VarChar(15)
+  passwd          String            @db.VarChar(32)
+  sale            sale[]
+  purchase        purchase[]
+  dailyCounting   dailyCounting[]
+  monthlyCounting monthlyCounting[]
 }
 
+// 岗位
 model job {
-  id      Int     @id @default(autoincrement())
-  jobName String  @unique
-  staff   staff[]
+  id    Int     @id @default(autoincrement())
+  name  String  @unique
+  staff staff[]
 }
 
+// 图书分类
 model category {
   id   Int    @id @default(autoincrement())
   name String @unique
   book book[]
 }
 
+// 图书
 model book {
   id              Int               @id @default(autoincrement())
   name            String            @unique
@@ -42,16 +50,20 @@ model book {
   purchaseDetails purchaseDetails[]
 }
 
+// 销售
 model sale {
-  id             Int           @id @default(autoincrement())
-  date           DateTime      @default(now())
-  theTotalAmount Decimal       @db.Decimal(10, 2)
-  salesDetail    salesDetail[]
+  id            Int           @id @default(autoincrement())
+  date          DateTime      @default(now())
+  salesperson   staff         @relation(fields: [salespersonId], references: [id])
+  salespersonId Int
+  // theTotalAmount Decimal       @db.Decimal(10, 2)
+  salesDetail   salesDetail[]
 }
 
+// 销售明细
 model salesDetail {
   id       Int     @id @default(autoincrement())
-  sale     sale    @relation(fields: [saleId], references: [id])
+  sale     sale    @relation(fields: [saleId], references: [id], onDelete: Cascade)
   saleId   Int
   book     book    @relation(fields: [bookId], references: [id])
   bookId   Int
@@ -59,6 +71,7 @@ model salesDetail {
   price    Decimal @db.Decimal(10, 2)
 }
 
+// 供货商
 model vendor {
   id            Int        @id @default(autoincrement())
   name          String     @unique
@@ -68,19 +81,43 @@ model vendor {
   purchase      purchase[]
 }
 
+// 进货
 model purchase {
   id              Int               @id @default(autoincrement())
+  date            DateTime          @default(now())
   vendor          vendor            @relation(fields: [vendorId], references: [id])
   vendorId        Int
+  operator        staff             @relation(fields: [operatorId], references: [id])
+  operatorId      Int
+  // theTotalAmount  Decimal           @db.Decimal(10, 2)
   purchaseDetails purchaseDetails[]
 }
 
+// 进货详情
 model purchaseDetails {
   id         Int      @id @default(autoincrement())
-  purchase   purchase @relation(fields: [purchaseId], references: [id])
+  purchase   purchase @relation(fields: [purchaseId], references: [id], onDelete: Cascade)
   purchaseId Int
   book       book     @relation(fields: [bookId], references: [id])
   bookId     Int
   quantity   Int
   price      Decimal  @db.Decimal(10, 2)
+}
+
+model dailyCounting {
+  id               Int      @id @default(autoincrement())
+  date             DateTime @db.Date
+  operator         staff    @relation(fields: [operatorId], references: [id])
+  operatorId       Int
+  bookId           Int
+  countRealNumbers Int
+}
+
+model monthlyCounting {
+  id               Int    @id @default(autoincrement())
+  month            String @db.Char(7)
+  operator         staff  @relation(fields: [operatorId], references: [id])
+  operatorId       Int
+  bookId           Int
+  countRealNumbers Int
 }

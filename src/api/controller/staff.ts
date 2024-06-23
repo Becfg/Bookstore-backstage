@@ -15,10 +15,10 @@ const staff: controller = {
 	addStaff: async (req, res) => {
 		try {
 			const addStaff = await prisma.staff.create({data: req.body})
-			res.status(201).send(addStaff)
+			res.send(addStaff)
 		} catch
 			(e) {
-			res.send(e)
+			res.status(400).send(e)
 		}
 	},
 	
@@ -32,9 +32,9 @@ const staff: controller = {
 		}
 		try {
 			const modifyStaff = await prisma.staff.update(staff)
-			res.send()
+			res.send(modifyStaff)
 		} catch (e) {
-			res.send(e)
+			res.status(400).send(e)
 		}
 	},
 	
@@ -48,7 +48,7 @@ const staff: controller = {
 			})
 			res.send(delStaff)
 		} catch (e) {
-			res.send(e)
+			res.status(400).send(e)
 		}
 	}
 }
