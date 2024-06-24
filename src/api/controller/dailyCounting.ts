@@ -1,124 +1,121 @@
-import {Prisma, PrismaClient} from '@prisma/client'
+import {PrismaClient, Prisma} from '@prisma/client'
 
 import {common} from "../../type/common";
 import controller = common.controller;
+import book from "./book";
 
 
 const prisma = new PrismaClient()
 
-const sale: controller = {
-	getSaleList: async (_req, res) => {
-		// 查询所有销售数据，包括其销售明细
-		const sales = await prisma.sale.findMany({
-			include: {
-				salesDetail: true
-			}
-		});
-		// 计算每个销售的总金额
-		const salesWithTotalAmount = sales.map(sale => {
-			const totalAmount = sale.salesDetail.reduce((acc, detail) => {
-				return acc + (detail.quantity * detail.price.toNumber());
-			}, 0);
-			const {salesDetail, ...res} = sale
-			return {...res, theTotalAmount: parseFloat(totalAmount.toFixed(2))}
-		});
+const dailyCounting: controller = {
+	getDailyCountingList: async (req, res) => {
+		const dailyCountingList = await prisma.dailyCounting.findMany()
 		
-		res.send(salesWithTotalAmount)
-	},
-	getSalesDetail: async (req, res) => {
-		const saleId = Number(req.params.saleId)
-		const salesDetail = await prisma.salesDetail.findMany({
-			where: {
-				saleId: saleId
-			}
-		})
-		res.send(salesDetail)
-	},
-	
-	addSale: async (req, res) => {
-		const {body} = req
-		try {
-			const addSale = await prisma.sale.create({
-				data: {
-					salespersonId: body.salespersonId,
-					salesDetail: {
-						createMany: {
-							data: body.salesDetail
-						}
+		let reslist: any = []
+		for (const i of dailyCountingList) {
+			// 获取昨日库存数
+			const yesterday = await prisma.dailyCounting.findUnique({
+				where: {
+					bookId_date: {
+						bookId: i.bookId,
+						date: new Date(new Date(i.date).setDate(new Date(i.date).getDate() - 1))
 					}
+				},
+				select: {
+					countRealNumbers: true
 				}
 			})
-			res.send(addSale)
+			
+			// const purchase = await prisma.$queryRaw`SELECT  DATE(purchase.date) AS isDate, purchaseDetails.bookId, Sum(purchaseDetails.quantity) AS 本日进货数
+			// FROM purchase INNER JOIN purchaseDetails ON purchase.id = purchaseDetails.purchaseId
+			// GROUP BY isDate, purchaseDetails.bookId
+			// HAVING (isDate = DATE(${i.date})) AND (purchaseDetails.bookId=${i.bookId});`
+			
+			// 获取今日进货数
+			const purchase = await prisma.purchaseDetails.aggregate({
+				where: {
+					purchase: {
+						date: {
+							gte: i.date,
+							lte: new Date(new Date(i.date).setHours(23, 59, 59))
+						}
+					},
+					bookId: i.bookId
+				},
+				_sum: {quantity: true}
+			})
+			
+			const sale = await prisma.salesDetail.aggregate({
+				where: {
+					sale: {
+						date: {
+							gte: i.date,
+							lte: new Date(new Date(i.date).setHours(23, 59, 59))
+						}
+					},
+					bookId: i.bookId
+				},
+				_sum: {quantity: true}
+			})
+			
+			let yesterdayInventory = yesterday ? yesterday.countRealNumbers : 0
+			let todaySArrival = purchase._sum.quantity ? purchase._sum.quantity : 0
+			let saleToday = sale._sum.quantity ? sale._sum.quantity : 0
+			let currentInventory = yesterdayInventory + todaySArrival - saleToday
+			let waxingAndWaning = i.countRealNumbers - currentInventory
+			
+			reslist.push({...i, yesterdayInventory, todaySArrival, saleToday,currentInventory,waxingAndWaning})
+		}
+		
+		
+		// console.log(reslist)
+		res.send(reslist
+			// dailyCountingList
+		)
+	},
+	
+	addDailyCounting: async (req, res) => {
+		req.body.date = new Date(req.body.date)
+		try {
+			const addDailyCounting = await prisma.dailyCounting.create({data: req.body})
+			res.send(addDailyCounting)
 		} catch
 			(e) {
 			res.status(400).send(e)
 		}
 	},
 	
-	modifySaleInfo: async (req, res) => {
-		const {id, ...data} = req.body
-		const sale: Prisma.saleUpdateArgs = data?.salesDetail ? {
+	modifyDailyCountingInfo: async (req, res) => {
+		req.body.date ? req.body.date = new Date(req?.body.date) : null
+		const {id, ...data} = req?.body
+		let dailyCounting: Prisma.dailyCountingUpdateArgs = {
 			where: {
 				id
 			},
-			data: {
-				salespersonId: data?.salespersonId,
-				salesDetail: {
-					update: {
-						where: {
-							id: data?.salesDetail.id
-						},
-						data: {
-							bookId: data?.salesDetail.bookId,
-							quantity: data?.salesDetail.quantity,
-							price: data?.salesDetail.price
-						}
-					}
-				}
-			}
-		} : {
-			where: {
-				id
-			},
-			data: {
-				salespersonId: data?.salespersonId,
-			}
+			data
 		}
-		console.log(sale)
 		try {
-			const modifySale = await prisma.sale.update(sale)
-			res.send(modifySale)
+			const modifyDailyCounting = await prisma.dailyCounting.update(dailyCounting)
+			res.send(modifyDailyCounting)
 		} catch (e) {
 			res.status(400).send(e)
 		}
 	},
 	
-	deleteSale: async (req, res) => {
+	deleteDailyCounting: async (req, res) => {
 		const {id} = req.params
 		try {
-			const delSale = await prisma.sale.delete({
+			const delDailyCounting = await prisma.dailyCounting.delete({
 				where: {
 					id: parseInt(id)
 				}
 			})
-			res.send(delSale)
-		} catch (e) {
-			res.status(400).send(e)
-		}
-	},
-	deleteSalesDetail: async (req, res) => {
-		const {saleId, id} = req.query
-		try {
-			const delSale = await prisma.salesDetail.delete({
-				where: {
-					saleId: Number(saleId),
-					id: Number(id)
-				}
-			})
-			res.send(delSale)
+			res.send(delDailyCounting)
 		} catch (e) {
 			res.status(400).send(e)
 		}
 	}
 }
-export default sale
+
+
+export default dailyCounting

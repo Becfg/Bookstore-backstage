@@ -6,6 +6,7 @@ import vendor from "./controller/vendor";
 import sale from "./controller/sale";
 import purchase from "./controller/purchase";
 import book from "./controller/book";
+import dailyCounting from "./controller/dailyCounting";
 
 
 const router = Router()
@@ -42,11 +43,15 @@ router.delete("/sale/:id", sale.deleteSale)
 router.delete("/salesDetail", sale.deleteSalesDetail)
 
 router.get('/purchase', purchase.getPurchaseList)
-router.get('/purchaDetails/:purchaseId', purchase.getPurchaseDetails)
+router.get('/purchaseDetails/:purchaseId', purchase.getPurchaseDetails)
 router.post('/purchase', purchase.addPurchase)
 router.put('/purchase', purchase.modifyPurchaseInfo)
 router.delete("/purchase/:id", purchase.deletePurchase)
 router.delete("/purchaseDetails", purchase.deletePurchaseDetails)
 
+router.get('/dailyCounting', dailyCounting.getDailyCountingList)
+router.post('/dailyCounting', dailyCounting.addDailyCounting)
+router.put('/dailyCounting', dailyCounting.modifyDailyCountingInfo)
+router.delete("/dailyCounting/:id", dailyCounting.deleteDailyCounting)
 
 export default router
