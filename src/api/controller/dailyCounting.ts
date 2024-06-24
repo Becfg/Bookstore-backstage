@@ -2,7 +2,6 @@ import {PrismaClient, Prisma} from '@prisma/client'
 
 import {common} from "../../type/common";
 import controller = common.controller;
-import book from "./book";
 
 
 const prisma = new PrismaClient()

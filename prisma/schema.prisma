@@ -48,6 +48,8 @@ model book {
   price           Decimal           @db.Decimal(10, 2)
   salesDetail     salesDetail[]
   purchaseDetails purchaseDetails[]
+  dailyCounting   dailyCounting[]
+  monthlyCounting monthlyCounting[]
 }
 
 // 销售
@@ -109,8 +111,11 @@ model dailyCounting {
   date             DateTime @db.Date
   operator         staff    @relation(fields: [operatorId], references: [id])
   operatorId       Int
+  book             book     @relation(fields: [bookId], references: [id])
   bookId           Int
   countRealNumbers Int
+
+  @@unique([bookId,date])
 }
 
 model monthlyCounting {
@@ -118,6 +123,9 @@ model monthlyCounting {
   month            String @db.Char(7)
   operator         staff  @relation(fields: [operatorId], references: [id])
   operatorId       Int
+  book             book   @relation(fields: [bookId], references: [id])
   bookId           Int
   countRealNumbers Int
+
+  @@unique([bookId, month])
 }
