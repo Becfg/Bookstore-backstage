@@ -5,10 +5,13 @@ import interC from "./util/interceptor";
 
 const app = express();
 const port = 8000;
-app.use(cors())
+app.use(cors(
+	{
+		allowedHeaders: ['Authorization', 'Content-Type']
+	}))
 app.use(express.json())
 
-app.use("/api",api)
+app.use("/api", api)
 app.use(interC)
 
 app.listen(port, () => {
