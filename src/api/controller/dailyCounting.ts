@@ -63,14 +63,18 @@ const dailyCounting: controller = {
 			let currentInventory = yesterdayInventory + todaySArrival - saleToday
 			let waxingAndWaning = i.countRealNumbers - currentInventory
 			
-			reslist.push({...i, yesterdayInventory, todaySArrival, saleToday,currentInventory,waxingAndWaning})
+			reslist.push({
+				...i,
+				yesterdayInventory,
+				todaySArrival,
+				saleToday,
+				currentInventory,
+				waxingAndWaning
+			})
 		}
 		
 		
-		// console.log(reslist)
-		res.send(reslist
-			// dailyCountingList
-		)
+		res.send(reslist)
 	},
 	
 	addDailyCounting: async (req, res) => {
