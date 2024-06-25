@@ -2,6 +2,11 @@ import {Request, Response} from "express";
 
 declare namespace common {
 	interface controller {
-		[key:string]: (req: Request, res: Response) => Promise<void>;
+		[key: string]: request;
+	}
+	
+	interface request {
+		(req: Request, res: Response,next?) : any |void
 	}
 }
+declare module 'jsonwebtoken'

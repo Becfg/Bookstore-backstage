@@ -8,6 +8,7 @@ import purchase from "./controller/purchase";
 import book from "./controller/book";
 import dailyCounting from "./controller/dailyCounting";
 import monthlyCounting from "./controller/monthlyCounting";
+import login from "./controller/login";
 
 
 const router = Router()
@@ -60,4 +61,5 @@ router.post('/monthlyCounting', monthlyCounting.addMonthlyCounting)
 router.put('/monthlyCounting', monthlyCounting.modifyMonthlyCountingInfo)
 router.delete("/monthlyCounting/:id", monthlyCounting.deleteMonthlyCounting)
 
+router.post('/login',login)
 export default router
