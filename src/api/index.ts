@@ -38,13 +38,16 @@ router.post('/category', category.addCategory)
 router.delete("/category/:id", category.deleteCategory)
 
 router.get('/sale', sale.getSaleList)
+router.get('/saleDetailRefer/:saleId', sale.getSalesDetailRefer)
 router.get('/saleDetail/:saleId', sale.getSalesDetail)
 router.post('/sale', sale.addSale)
 router.put('/sale', sale.modifySaleInfo)
 router.delete("/sale/:id", sale.deleteSale)
 router.delete("/salesDetail", sale.deleteSalesDetail)
 
+
 router.get('/purchase', purchase.getPurchaseList)
+router.get('/purchaseDetailsRefer/:purchaseId', purchase.getPurchaseDetailsRefer)
 router.get('/purchaseDetails/:purchaseId', purchase.getPurchaseDetails)
 router.post('/purchase', purchase.addPurchase)
 router.put('/purchase', purchase.modifyPurchaseInfo)
@@ -61,5 +64,5 @@ router.post('/monthlyCounting', monthlyCounting.addMonthlyCounting)
 router.put('/monthlyCounting', monthlyCounting.modifyMonthlyCountingInfo)
 router.delete("/monthlyCounting/:id", monthlyCounting.deleteMonthlyCounting)
 
-router.post('/login',login)
+router.post('/login', login)
 export default router

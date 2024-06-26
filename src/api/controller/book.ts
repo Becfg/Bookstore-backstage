@@ -1,4 +1,4 @@
-import {PrismaClient, Prisma} from '@prisma/client'
+import {Prisma} from '@prisma/client'
 
 import {common} from "../../type/common";
 import controller = common.controller;

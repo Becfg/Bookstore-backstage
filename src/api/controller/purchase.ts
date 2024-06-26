@@ -1,4 +1,4 @@
-import {Prisma, PrismaClient} from '@prisma/client'
+import {Prisma} from '@prisma/client'
 
 import {common} from "../../type/common";
 import controller = common.controller;
@@ -31,7 +31,21 @@ const purchase: controller = {
 				purchaseId: purchaseId
 			}
 		})
-
+		
+		res.send(purchaseDetails)
+	},
+	getPurchaseDetailsRefer: async (req, res) => {
+		const purchaseId = Number(req.params.purchaseId)
+		const purchaseDetails = await prisma.purchaseDetails.findMany({
+			where: {
+				purchaseId: purchaseId
+			},
+			include: {
+				purchase: true,
+				book: true
+			}
+		})
+		
 		res.send(purchaseDetails)
 	},
 	
