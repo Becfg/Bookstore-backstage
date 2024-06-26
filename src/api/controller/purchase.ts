@@ -32,7 +32,11 @@ const purchase: controller = {
 				purchaseId: purchaseId
 			}
 		})
-		res.send(purchaseDetails)
+		const toNum = purchaseDetails.map((purchase) => {
+			const price = purchase.price.toNumber()
+			return {...purchase, price}
+		})
+		res.send(toNum)
 	},
 	
 	addPurchase: async (req, res) => {

@@ -9,7 +9,11 @@ const prisma = new PrismaClient()
 const book: controller = {
 	getBookList: async (req, res) => {
 		const bookList = await prisma.book.findMany()
-		res.send(bookList)
+		const toNum = bookList.map((book) => {
+			const price = book.price.toNumber()
+			return {...book, price}
+		})
+		res.send(toNum)
 	},
 	
 	addBook: async (req, res) => {
@@ -31,7 +35,7 @@ const book: controller = {
 			data
 		}
 		try {
-			 await prisma.book.update(book)
+			await prisma.book.update(book)
 			res.send()
 		} catch (e) {
 			res.status(400).send(e)

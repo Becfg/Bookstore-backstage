@@ -32,7 +32,11 @@ const sale: controller = {
 				saleId: saleId
 			}
 		})
-		res.send(salesDetail)
+		const toNum = salesDetail.map((sale) => {
+			const price = sale.price.toNumber()
+			return {...sale, price}
+		})
+		res.send(toNum)
 	},
 	
 	addSale: async (req, res) => {
