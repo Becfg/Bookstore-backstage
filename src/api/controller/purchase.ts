@@ -40,7 +40,10 @@ const purchase: controller = {
 			where: {
 				purchaseId: purchaseId
 			},
-			include: {
+			select: {
+				id: true,
+				price: true,
+				quantity: true,
 				purchase: true,
 				book: true
 			}
