@@ -17,7 +17,7 @@ const interC: request = (req, res, next) => {
 		const {username, password}: any = paload
 		const newToken = jwt.creat({username, password})
 		// 重新设置token
-		res.header('Authorization', newToken);
+		res.setHeader('Authorization', newToken);
 		next();
 	} else {
 		// 返回错误

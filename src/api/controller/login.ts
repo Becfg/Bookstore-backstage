@@ -18,7 +18,7 @@ const login: request = async (req, res) => {
 	)
 	if (userlogin != null) {
 		const token = jwt.creat({username, password})
-		res.header("Authorization", token)
+		res.setHeader("Authorization", `Bearer ${token}`)
 		res.send({
 			success: true
 		})
