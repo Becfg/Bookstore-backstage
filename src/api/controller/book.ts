@@ -18,8 +18,8 @@ const book: controller = {
 	
 	addBook: async (req, res) => {
 		try {
-			await prisma.book.create({data: req.body})
-			res.send()
+			const book =  await prisma.book.create({data: req.body})
+			res.send(book)
 		} catch
 			(e) {
 			res.status(400).send(e)
@@ -28,15 +28,15 @@ const book: controller = {
 	
 	modifyBookInfo: async (req, res) => {
 		const {id, ...data} = req.body
-		let book: Prisma.bookUpdateArgs = {
+		let bookU: Prisma.bookUpdateArgs = {
 			where: {
 				id
 			},
 			data
 		}
 		try {
-			await prisma.book.update(book)
-			res.send()
+			const book = await prisma.book.update(bookU)
+			res.send(book)
 		} catch (e) {
 			res.status(400).send(e)
 		}
@@ -45,12 +45,12 @@ const book: controller = {
 	deleteBook: async (req, res) => {
 		const {id} = req.params
 		try {
-			await prisma.book.delete({
+			const book = await prisma.book.delete({
 				where: {
 					id: parseInt(id)
 				}
 			})
-			res.send()
+			res.send(book)
 		} catch (e) {
 			res.status(400).send(e)
 		}
