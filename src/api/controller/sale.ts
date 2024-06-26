@@ -2,9 +2,9 @@ import {Prisma, PrismaClient} from '@prisma/client'
 
 import {common} from "../../type/common";
 import controller = common.controller;
+import prisma from "../client";
 
 
-const prisma = new PrismaClient()
 
 const sale: controller = {
 	getSaleList: async (_req, res) => {
@@ -17,7 +17,7 @@ const sale: controller = {
 		// 计算每个销售的总金额
 		const salesWithTotalAmount = sales.map(sale => {
 			const totalAmount = sale.salesDetail.reduce((acc, detail) => {
-				return acc + (detail.quantity * detail.price.toNumber());
+				return acc + (detail.quantity * detail.price);
 			}, 0);
 			const {salesDetail, ...res} = sale
 			return {...res, theTotalAmount: parseFloat(totalAmount.toFixed(2))}
@@ -32,11 +32,7 @@ const sale: controller = {
 				saleId: saleId
 			}
 		})
-		const toNum = salesDetail.map((sale) => {
-			const price = sale.price.toNumber()
-			return {...sale, price}
-		})
-		res.send(toNum)
+		res.send(salesDetail)
 	},
 	
 	addSale: async (req, res) => {

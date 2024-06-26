@@ -2,23 +2,18 @@ import {PrismaClient, Prisma} from '@prisma/client'
 
 import {common} from "../../type/common";
 import controller = common.controller;
+import prisma from "../client";
 
-
-const prisma = new PrismaClient()
 
 const book: controller = {
 	getBookList: async (req, res) => {
 		const bookList = await prisma.book.findMany()
-		const toNum = bookList.map((book) => {
-			const price = book.price.toNumber()
-			return {...book, price}
-		})
-		res.send(toNum)
+		res.send(bookList)
 	},
 	
 	addBook: async (req, res) => {
 		try {
-			const book =  await prisma.book.create({data: req.body})
+			const book = await prisma.book.create({data: req.body})
 			res.send(book)
 		} catch
 			(e) {
