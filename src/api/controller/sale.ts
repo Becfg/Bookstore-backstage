@@ -54,7 +54,7 @@ const sale: controller = {
 	},
 	
 	addSale: async (req, res) => {
-		const {body, body: {salesDetail = []}} = req
+		const {body} = req
 		try {
 			const addSale = await prisma.sale.create({
 				data: {
@@ -62,7 +62,7 @@ const sale: controller = {
 					date: new Date(body?.date),
 					salesDetail: {
 						createMany: {
-							data: salesDetail
+							data: body?.salesDetail ?? [] //默认值
 						}
 					}
 				}
@@ -74,7 +74,7 @@ const sale: controller = {
 	},
 	
 	modifySaleInfo: async (req, res) => {
-		const {body,body:{salesDetail:{id = 0}}} = req
+		const {body} = req
 		const sale: Prisma.saleUpdateArgs = body?.salesDetail ? {
 			where: {
 				id: body?.id
@@ -90,7 +90,7 @@ const sale: controller = {
 							price: body?.salesDetail.price,
 						},
 						where: {
-							id
+							id: body?.salesDetail.id ?? 0,//默认值
 						},
 						update: {
 							bookId: body?.salesDetail.bookId,
@@ -109,7 +109,6 @@ const sale: controller = {
 				date: new Date(body?.date),
 			}
 		}
-		console.log(sale)
 		try {
 			const modifySale = await prisma.sale.update(sale)
 			res.send(modifySale)

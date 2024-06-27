@@ -54,7 +54,7 @@ const purchase: controller = {
 	},
 	
 	addPurchase: async (req, res) => {
-		const {body, body: {purchaseDetails = []}} = req
+		const {body} = req
 		
 		try {
 			const addPurchase = await prisma.purchase.create({
@@ -64,7 +64,7 @@ const purchase: controller = {
 					date: new Date(body?.date),
 					purchaseDetails: {
 						createMany: {
-							data: purchaseDetails
+							data: body.purchaseDetails ?? []//默认值
 						}
 					}
 				}
@@ -76,7 +76,7 @@ const purchase: controller = {
 	},
 	
 	modifyPurchaseInfo: async (req, res) => {
-		const {body, body: {purchaseDetails: {id = 0}}} = req
+		const {body} = req
 		const purchase: Prisma.purchaseUpdateArgs = body?.purchaseDetails ? {
 			where: {
 				id: body?.id
@@ -93,7 +93,7 @@ const purchase: controller = {
 							price: body?.purchaseDetails.price,
 						},
 						where: {
-							id
+							id: body?.purchaseDetails.id ?? 0//默认值
 						},
 						update: {
 							bookId: body?.purchaseDetails.bookId,
@@ -109,6 +109,7 @@ const purchase: controller = {
 			},
 			data: {
 				operatorId: body?.operatorId,
+				vendorId: body?.vendorId,
 				date: new Date(body?.date),
 			}
 		}
