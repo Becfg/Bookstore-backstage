@@ -5,7 +5,7 @@ import interC from "./util/interceptor";
 
 const app = express();
 const port = 8000;
-app.use(interC)
+
 app.use(cors(
 	{
 		origin: '*', // 允许所有来源  
@@ -14,7 +14,7 @@ app.use(cors(
 		exposedHeaders: ['Content-Type', 'Authorization']
 	}))
 app.use(express.json())
-
+app.use(interC)
 app.use("/api", api)
 
 

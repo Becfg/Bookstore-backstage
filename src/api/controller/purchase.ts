@@ -76,28 +76,29 @@ const purchase: controller = {
 	},
 	
 	modifyPurchaseInfo: async (req, res) => {
-		const {body, body: {salesDetail: {id = 0}}} = req
+		const {body, body: {purchaseDetails: {id = 0}}} = req
 		const purchase: Prisma.purchaseUpdateArgs = body?.purchaseDetails ? {
 			where: {
 				id: body?.id
 			},
 			data: {
+				vendorId: body?.vendorId,
 				operatorId: body?.operatorId,
 				date: new Date(body?.date),
 				purchaseDetails: {
 					upsert: {
 						create: {
-							bookId: body?.salesDetail.bookId,
-							quantity: body?.salesDetail.quantity,
-							price: body?.salesDetail.price,
+							bookId: body?.purchaseDetails.bookId,
+							quantity: body?.purchaseDetails.quantity,
+							price: body?.purchaseDetails.price,
 						},
 						where: {
 							id
 						},
 						update: {
-							bookId: body?.salesDetail.bookId,
-							quantity: body?.salesDetail.quantity,
-							price: body?.salesDetail.price,
+							bookId: body?.purchaseDetails.bookId,
+							quantity: body?.purchaseDetails.quantity,
+							price: body?.purchaseDetails.price,
 						}
 					}
 				}
