@@ -44,7 +44,8 @@ const sale: controller = {
 			include: {
 				book: true,
 				sale: true
-			}, omit: {
+			},
+			omit: {
 				saleId: true,
 				bookId: true
 			}
@@ -53,7 +54,7 @@ const sale: controller = {
 	},
 	
 	addSale: async (req, res) => {
-		const {body,body: {salesDetail = []}} = req
+		const {body, body: {salesDetail = []}} = req
 		try {
 			const addSale = await prisma.sale.create({
 				data: {
@@ -73,39 +74,39 @@ const sale: controller = {
 	},
 	
 	modifySaleInfo: async (req, res) => {
-		const {id, ...data} = req.body
-		const sale: Prisma.saleUpdateArgs = data?.salesDetail ? {
+		const {body,body:{salesDetail:{id = 0}}} = req
+		const sale: Prisma.saleUpdateArgs = body?.salesDetail ? {
 			where: {
-				id
+				id: body?.id
 			},
 			data: {
-				salespersonId: data?.salespersonId,
-				date: new Date(data?.date),
+				salespersonId: body?.salespersonId,
+				date: new Date(body?.date),
 				salesDetail: {
 					upsert: {
-						where: {
-							id: data?.salesDetail.id
-						},
 						create: {
-							bookId: data?.salesDetail.bookId,
-							quantity: data?.salesDetail.quantity,
-							price: data?.salesDetail.price,
-							
+							bookId: body?.salesDetail.bookId,
+							quantity: body?.salesDetail.quantity,
+							price: body?.salesDetail.price,
+						},
+						where: {
+							id
 						},
 						update: {
-							bookId: data?.salesDetail.bookId,
-							quantity: data?.salesDetail.quantity,
-							price: data?.salesDetail.price,
+							bookId: body?.salesDetail.bookId,
+							quantity: body?.salesDetail.quantity,
+							price: body?.salesDetail.price,
 						}
 					}
 				}
 			}
-		} : {
+		} : { //处理空明细
 			where: {
-				id
+				id: body?.id
 			},
 			data: {
-				salespersonId: data?.salespersonId,
+				salespersonId: body?.salespersonId,
+				date: new Date(body?.date),
 			}
 		}
 		console.log(sale)

@@ -11,7 +11,7 @@ const interC: request = (req, res, next) => {
 	// 从headers中拿token
 	const token = req.headers["authorization"];
 	// 解析token
-	const paload = jwt.verify(token || '');
+	const paload = jwt.verify(token!.split(" ")[1] || '');
 	// 重新生成token
 	if (token && paload) {
 		const {username, password}: any = paload

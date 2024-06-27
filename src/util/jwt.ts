@@ -8,7 +8,7 @@ const Jwt={
 	 * @param {*} value 要加密的值
 	 * @param {*} time 过期时间
 	 */
-	creat:(value:object,time='60s')=>{
+	creat:(value:object,time='1h')=>{
 		return jwt.sign(value,secretOrPrivateKey,{expiresIn:time})
 	},
 	/**
