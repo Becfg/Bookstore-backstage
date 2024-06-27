@@ -27,6 +27,7 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           password: ${{ secrets.SERVER_PASSWORD }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd Desktop\Bookstore-backstage  && git pull  && pnpm i  && npx prisma db push   && npm run build   && pm2 restart app
 
