@@ -1,0 +1,50 @@
+on:
+  push:
+    branches:
+      - backEnd
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      # 私钥
+      SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+      # 用户名
+      SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
+      # 主机地址
+      SSH_HOST: ${{ secrets.SSH_HOST }}
+      # 指纹
+      SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOST }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20'  # 选择合适的 Node.js 版本
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: database push
+        run: npx prisma db push
+
+      - name: Build project
+        run: npm run build
+
+      - name: Deploy to server
+        uses: appleboy/ssh-action@master
+        with:
+          host: $SSH_HOST
+          username: $SSH_USERNAME
+          key: $SSH_PRIVATE_KEY
+          script: |
+            cd Desktop\Bookstore-backstage
+            git pull origin main
+            npm install
+            pm2 restart all
+
+
+
+            
