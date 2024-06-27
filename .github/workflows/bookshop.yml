@@ -28,10 +28,10 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           password: ${{ secrets.SERVER_PASSWORD }}
           script: |
-            cd Desktop\Bookstore-backstage
-            git pull
-            npx prisma db push
-            npm run build
+            cd Desktop\Bookstore-backstage &&
+            git pull &&
+            npx prisma db push &&
+            npm run build &&
             pm2 restart app
 
 
