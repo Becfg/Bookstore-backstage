@@ -22,9 +22,9 @@ jobs:
       - name: Deploy to server
         uses: appleboy/ssh-action@master
         with:
-          host: $SSH_HOST
-          username: $SSH_USERNAME
-          key: $SSH_PRIVATE_KEY
+          host: "$SSH_HOST"
+          username: "$SSH_USERNAME"
+          key: "$SSH_PRIVATE_KEY"
           script: |
             cd Desktop\Bookstore-backstage
             git pull
