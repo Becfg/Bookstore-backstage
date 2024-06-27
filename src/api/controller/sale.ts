@@ -58,6 +58,7 @@ const sale: controller = {
 			const addSale = await prisma.sale.create({
 				data: {
 					salespersonId: body.salespersonId,
+					date:body?.date,
 					salesDetail: {
 						createMany: {
 							data: body.salesDetail
@@ -66,8 +67,7 @@ const sale: controller = {
 				}
 			})
 			res.send(addSale)
-		} catch
-			(e) {
+		} catch (e) {
 			res.status(400).send(e)
 		}
 	},
@@ -80,6 +80,7 @@ const sale: controller = {
 			},
 			data: {
 				salespersonId: data?.salespersonId,
+				date:data?.date,
 				salesDetail: {
 					update: {
 						where: {
@@ -88,7 +89,7 @@ const sale: controller = {
 						data: {
 							bookId: data?.salesDetail.bookId,
 							quantity: data?.salesDetail.quantity,
-							price: data?.salesDetail.price
+							price: data?.salesDetail.price,
 						}
 					}
 				}
