@@ -76,42 +76,41 @@ const purchase: controller = {
 	},
 	
 	modifyPurchaseInfo: async (req, res) => {
-		const {id, ...data} = req.body
-		const purchase: Prisma.purchaseUpdateArgs = data?.purchaseDetails ? {
+		const {body, body: {salesDetail: {id = 0}}} = req
+		const purchase: Prisma.purchaseUpdateArgs = body?.purchaseDetails ? {
 			where: {
-				id
+				id: body?.id
 			},
 			data: {
-				operatorId: data?.operatorId,
-				date: new Date(data?.date),
+				operatorId: body?.operatorId,
+				date: new Date(body?.date),
 				purchaseDetails: {
 					upsert: {
-						where: {
-							id: data?.salesDetail.id
-						},
 						create: {
-							bookId: data?.salesDetail.bookId,
-							quantity: data?.salesDetail.quantity,
-							price: data?.salesDetail.price,
-							
+							bookId: body?.salesDetail.bookId,
+							quantity: body?.salesDetail.quantity,
+							price: body?.salesDetail.price,
+						},
+						where: {
+							id
 						},
 						update: {
-							bookId: data?.salesDetail.bookId,
-							quantity: data?.salesDetail.quantity,
-							price: data?.salesDetail.price,
+							bookId: body?.salesDetail.bookId,
+							quantity: body?.salesDetail.quantity,
+							price: body?.salesDetail.price,
 						}
 					}
 				}
 			}
-		} : {
+		} : {//处理空明细
 			where: {
-				id
+				id: body?.id
 			},
 			data: {
-				operatorId: data?.operatorId,
+				operatorId: body?.operatorId,
+				date: new Date(body?.date),
 			}
 		}
-		console.log(purchase)
 		try {
 			const modifyPurchase = await prisma.purchase.update(purchase)
 			res.send(modifyPurchase)
