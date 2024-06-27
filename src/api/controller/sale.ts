@@ -23,7 +23,7 @@ const sale: controller = {
 			return {...res, theTotalAmount: parseFloat(totalAmount.toFixed(2))}
 		});
 		
-		res.send("加油奥里给!!!")
+		res.send(salesWithTotalAmount)
 	},
 	getSalesDetail: async (req, res) => {
 		const saleId = Number(req.params.saleId)
