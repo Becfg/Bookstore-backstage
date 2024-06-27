@@ -1,12 +1,13 @@
-import {Prisma} from '@prisma/client'
+import {Prisma, PrismaClient} from '@prisma/client'
 
 import {common} from "../../type/common";
 import controller = common.controller;
-import prisma from "../client";
+import {decimalToFloatExtension} from "../client";
 
+const prisma = new PrismaClient().$extends(decimalToFloatExtension)
 
 const book: controller = {
-	getBookList: async (req, res) => {
+	getBookList: async (_req, res) => {
 		const bookList = await prisma.book.findMany()
 		res.send(bookList)
 	},

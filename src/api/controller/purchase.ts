@@ -1,9 +1,10 @@
-import {Prisma} from '@prisma/client'
+import {Prisma, PrismaClient} from '@prisma/client'
 
 import {common} from "../../type/common";
 import controller = common.controller;
-import prisma from "../client";
+import {decimalToFloatExtension} from "../client";
 
+const prisma = new PrismaClient().$extends(decimalToFloatExtension)
 
 const purchase: controller = {
 	getPurchaseList: async (_req, res) => {
@@ -40,12 +41,12 @@ const purchase: controller = {
 			where: {
 				purchaseId: purchaseId
 			},
-			select: {
-				id: true,
-				price: true,
-				quantity: true,
-				purchase: true,
-				book: true
+			include: {
+				book: true,
+				purchase: true
+			}, omit: {
+				purchaseId: true,
+				bookId: true
 			}
 		})
 		
