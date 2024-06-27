@@ -58,7 +58,7 @@ const sale: controller = {
 			const addSale = await prisma.sale.create({
 				data: {
 					salespersonId: body.salespersonId,
-					date:body?.date,
+					date: new Date(body?.date),
 					salesDetail: {
 						createMany: {
 							data: body.salesDetail
@@ -80,7 +80,7 @@ const sale: controller = {
 			},
 			data: {
 				salespersonId: data?.salespersonId,
-				date:data?.date,
+				date: new Date(data?.date),
 				salesDetail: {
 					update: {
 						where: {

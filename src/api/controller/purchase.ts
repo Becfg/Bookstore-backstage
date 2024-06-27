@@ -60,7 +60,7 @@ const purchase: controller = {
 				data: {
 					vendorId: body.vendorId,
 					operatorId: body.operatorId,
-					date: body.date,
+					date: new Date(body?.date),
 					purchaseDetails: {
 						createMany: {
 							data: body.purchaseDetails
@@ -83,7 +83,7 @@ const purchase: controller = {
 			},
 			data: {
 				operatorId: data?.operatorId,
-				date:data?.date,
+				date: new Date(data?.date),
 				purchaseDetails: {
 					update: {
 						where: {
