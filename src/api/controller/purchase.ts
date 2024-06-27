@@ -54,7 +54,8 @@ const purchase: controller = {
 	},
 	
 	addPurchase: async (req, res) => {
-		const {body} = req
+		const {body, body: {purchaseDetails = []}} = req
+		
 		try {
 			const addPurchase = await prisma.purchase.create({
 				data: {
@@ -63,14 +64,13 @@ const purchase: controller = {
 					date: new Date(body?.date),
 					purchaseDetails: {
 						createMany: {
-							data: body.purchaseDetails
+							data: purchaseDetails
 						}
 					}
 				}
 			})
 			res.send(addPurchase)
-		} catch
-			(e) {
+		} catch (e) {
 			res.status(400).send(e)
 		}
 	},

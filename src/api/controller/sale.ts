@@ -53,7 +53,7 @@ const sale: controller = {
 	},
 	
 	addSale: async (req, res) => {
-		const {body} = req
+		const {body,body: {salesDetail = []}} = req
 		try {
 			const addSale = await prisma.sale.create({
 				data: {
@@ -61,7 +61,7 @@ const sale: controller = {
 					date: new Date(body?.date),
 					salesDetail: {
 						createMany: {
-							data: body.salesDetail
+							data: salesDetail
 						}
 					}
 				}
