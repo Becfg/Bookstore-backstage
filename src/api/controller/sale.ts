@@ -82,11 +82,17 @@ const sale: controller = {
 				salespersonId: data?.salespersonId,
 				date: new Date(data?.date),
 				salesDetail: {
-					update: {
+					upsert: {
 						where: {
 							id: data?.salesDetail.id
 						},
-						data: {
+						create: {
+							bookId: data?.salesDetail.bookId,
+							quantity: data?.salesDetail.quantity,
+							price: data?.salesDetail.price,
+							
+						},
+						update: {
 							bookId: data?.salesDetail.bookId,
 							quantity: data?.salesDetail.quantity,
 							price: data?.salesDetail.price,

@@ -85,14 +85,20 @@ const purchase: controller = {
 				operatorId: data?.operatorId,
 				date: new Date(data?.date),
 				purchaseDetails: {
-					update: {
+					upsert: {
 						where: {
-							id: data?.purchaseDetails.id
+							id: data?.salesDetail.id
 						},
-						data: {
-							bookId: data?.purchaseDetails.bookId,
-							quantity: data?.purchaseDetails.quantity,
-							price: data?.purchaseDetails.price
+						create: {
+							bookId: data?.salesDetail.bookId,
+							quantity: data?.salesDetail.quantity,
+							price: data?.salesDetail.price,
+							
+						},
+						update: {
+							bookId: data?.salesDetail.bookId,
+							quantity: data?.salesDetail.quantity,
+							price: data?.salesDetail.price,
 						}
 					}
 				}
