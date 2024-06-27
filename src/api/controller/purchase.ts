@@ -76,44 +76,48 @@ const purchase: controller = {
 	},
 	
 	modifyPurchaseInfo: async (req, res) => {
-		const {body} = req
-		const purchase: Prisma.purchaseUpdateArgs = body?.purchaseDetails ? {
-			where: {
-				id: body?.id
-			},
-			data: {
-				vendorId: body?.vendorId,
-				operatorId: body?.operatorId,
-				date: new Date(body?.date),
-				purchaseDetails: {
-					upsert: {
-						create: {
-							bookId: body?.purchaseDetails.bookId,
-							quantity: body?.purchaseDetails.quantity,
-							price: body?.purchaseDetails.price,
-						},
-						where: {
-							id: body?.purchaseDetails.id ?? 0//默认值
-						},
-						update: {
-							bookId: body?.purchaseDetails.bookId,
-							quantity: body?.purchaseDetails.quantity,
-							price: body?.purchaseDetails.price,
+		let {body} = req
+		let {vendorId, operatorId, date, purchaseDetails} = body
+		let {bookId, quantity, price} = purchaseDetails
+		date = date ? new Date(date) : undefined
+		
+		try {
+			const purchase: Prisma.purchaseUpdateArgs = body?.purchaseDetails ? {
+				where: {
+					id: body?.id
+				},
+				data: {
+					vendorId,
+					operatorId,
+					date,
+					purchaseDetails: {
+						upsert: {
+							where: {
+								id: body?.purchaseDetails.id ?? 0//默认值
+							},
+							create: {
+								bookId: body?.purchaseDetails.bookId,
+								quantity: body?.purchaseDetails.quantity,
+								price: body?.purchaseDetails.price,
+							},
+							update: {
+								bookId,
+								quantity,
+								price,
+							}
 						}
 					}
 				}
+			} : {//处理空明细
+				where: {
+					id: body?.id
+				},
+				data: {
+					operatorId,
+					vendorId,
+					date,
+				}
 			}
-		} : {//处理空明细
-			where: {
-				id: body?.id
-			},
-			data: {
-				operatorId: body?.operatorId,
-				vendorId: body?.vendorId,
-				date: new Date(body?.date),
-			}
-		}
-		try {
 			const modifyPurchase = await prisma.purchase.update(purchase)
 			res.send(modifyPurchase)
 		} catch (e) {

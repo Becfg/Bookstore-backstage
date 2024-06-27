@@ -74,42 +74,46 @@ const sale: controller = {
 	},
 	
 	modifySaleInfo: async (req, res) => {
-		const {body} = req
-		const sale: Prisma.saleUpdateArgs = body?.salesDetail ? {
-			where: {
-				id: body?.id
-			},
-			data: {
-				salespersonId: body?.salespersonId,
-				date: new Date(body?.date),
-				salesDetail: {
-					upsert: {
-						create: {
-							bookId: body?.salesDetail.bookId,
-							quantity: body?.salesDetail.quantity,
-							price: body?.salesDetail.price,
-						},
-						where: {
-							id: body?.salesDetail.id ?? 0,//默认值
-						},
-						update: {
-							bookId: body?.salesDetail.bookId,
-							quantity: body?.salesDetail.quantity,
-							price: body?.salesDetail.price,
+		let {body} = req
+		let {salespersonId, date, salesDetail} = body
+		let {bookId, quantity, price} = salesDetail
+		date = date ? new Date(date) : undefined
+		
+		try {
+			const sale: Prisma.saleUpdateArgs = body?.salesDetail ? {
+				where: {
+					id: body?.id
+				},
+				data: {
+					salespersonId,
+					date,
+					salesDetail: {
+						upsert: {
+							where: {
+								id: body?.salesDetail.id ?? 0,//默认值
+							},
+							create: {
+								bookId: body?.salesDetail.bookId,
+								quantity: body?.salesDetail.quantity,
+								price: body?.salesDetail.price,
+							},
+							update: {
+								bookId,
+								quantity,
+								price,
+							}
 						}
 					}
 				}
+			} : { //处理空明细
+				where: {
+					id: body?.id
+				},
+				data: {
+					salespersonId,
+					date,
+				}
 			}
-		} : { //处理空明细
-			where: {
-				id: body?.id
-			},
-			data: {
-				salespersonId: body?.salespersonId,
-				date: new Date(body?.date),
-			}
-		}
-		try {
 			const modifySale = await prisma.sale.update(sale)
 			res.send(modifySale)
 		} catch (e) {
