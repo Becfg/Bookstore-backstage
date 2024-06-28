@@ -62,9 +62,11 @@ const dailyCounting: controller = {
 			let saleToday = sale._sum.quantity ? sale._sum.quantity : 0
 			let currentInventory = yesterdayInventory + todaySArrival - saleToday
 			let waxingAndWaning = i.countRealNumbers - currentInventory
+			let date = i.date.toISOString().slice(0, 10)
 			
 			reslist.push({
 				...i,
+				date,
 				yesterdayInventory,
 				todaySArrival,
 				saleToday,
@@ -89,7 +91,7 @@ const dailyCounting: controller = {
 	},
 	
 	modifyDailyCountingInfo: async (req, res) => {
-		req.body.date ? req.body.date = new Date(req?.body.date) : null
+		req.body.date = new Date(req?.body.date)
 		const {id, ...data} = req?.body
 		let dailyCounting: Prisma.dailyCountingUpdateArgs = {
 			where: {
