@@ -54,14 +54,15 @@ const purchase: controller = {
 	},
 	
 	addPurchase: async (req, res) => {
-		const {body} = req
+		let {body, body: {date}} = req
+		date = date ? new Date(date) : undefined
 		
 		try {
 			const addPurchase = await prisma.purchase.create({
 				data: {
 					vendorId: body.vendorId,
 					operatorId: body.operatorId,
-					date: new Date(body?.date),
+					date,
 					purchaseDetails: {
 						createMany: {
 							data: body.purchaseDetails ?? []//默认值
