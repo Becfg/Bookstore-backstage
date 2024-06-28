@@ -3,7 +3,7 @@ import { deleteUser, getUserList, postUser, putUser } from '@/apis/user';
 import { ElMessage, ElTable } from 'element-plus'
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { Job, User } from './type';
-import { user } from '@/stores/user';
+import { userStore } from '@/stores/user';
 import jobStore from '@/stores/job';
 
 defineOptions({
@@ -36,17 +36,17 @@ const handleClick = (row: User) => {
 }
 
 onMounted(() => {
-  if (user.value.length < 1) {
+  if (userStore.value.length < 1) {
     getUsers();
   } else {
-    tableData.value = user.value;
+    tableData.value = userStore.value;
   }
 })
 
 const getUsers = async () => {
   const res = await getUserList();
   tableData.value = res as User[];
-  user.value = tableData.value;
+  userStore.value = tableData.value;
 }
 
 const visible = ref(false);

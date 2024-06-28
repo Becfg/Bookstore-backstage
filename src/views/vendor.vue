@@ -3,6 +3,7 @@ import { onMounted, ref } from 'vue';
 import { Vendor } from './type';
 import { deleteVendor, getVendorList, postVendor, putVendor } from '@/apis/vendor';
 import { ElMessage, ElTable } from 'element-plus';
+import { vendorStore } from '@/stores/vendor';
 
 const elName = 'vendor'
 
@@ -28,12 +29,17 @@ const vendorForm = ref<Vendor>({
 });
 
 onMounted(() => {
-    getVendors();
+    if (vendorStore.value.length < 1) {
+        getVendors();
+    } else {
+        tableData.value = vendorStore.value;
+    }
 })
 
 const getVendors = async () => {
     const res = await getVendorList();
     tableData.value = res as Vendor[];
+    vendorStore.value = tableData.value;
 }
 
 const handleClick = (row: Vendor, type: string) => {

@@ -1,5 +1,5 @@
 import { useStorage } from '@vueuse/core'
 
-const token = useStorage('token', null);
+const tokenStore = useStorage('tokenStore', null);
 
-export default token;
+export default tokenStore;

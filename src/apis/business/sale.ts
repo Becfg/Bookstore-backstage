@@ -1,5 +1,5 @@
-import http from '../'
-import { Sale } from '@/views/business/type'
+import http from '..'
+import { SaleCreate, SaleUpdate } from '@/views/business/type'
 
 export async function getSaleList() {
   return new Promise((resolve, reject) => {
@@ -35,7 +35,7 @@ export async function getSaleDetailRefer(id: number) {
   })
 }
 
-export async function postSale(form: Sale) {
+export async function postSale(form: SaleCreate) {
   return new Promise((resolve, reject) => {
     http
       .post('/api/sale', form, {
@@ -52,10 +52,10 @@ export async function postSale(form: Sale) {
   })
 }
 
-export async function putSale(user: Sale) {
+export async function putSale(form: SaleCreate | SaleUpdate) {
   return new Promise((resolve, reject) => {
     http
-      .put(`/api/book`, user)
+      .put(`/api/sale`, form)
       .then((res) => {
         return resolve(res.data)
       })
@@ -65,10 +65,23 @@ export async function putSale(user: Sale) {
   })
 }
 
-export async function deleteBook(id: number) {
+export async function deleteSale(id: number) {
   return new Promise((resolve, reject) => {
     http
-      .delete(`/api/book/${id}`)
+      .delete(`/api/sale/${id}`)
+      .then((res) => {
+        return resolve(res.data)
+      })
+      .catch((err) => {
+        return reject(err)
+      })
+  })
+}
+
+export async function deleteSaleDetail(id: number, saleId: number) {
+  return new Promise((resolve, reject) => {
+    http
+      .delete(`/api/salesDetail?id=${id}&saleId=${saleId}`)
       .then((res) => {
         return resolve(res.data)
       })

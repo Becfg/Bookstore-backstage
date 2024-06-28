@@ -136,6 +136,7 @@ const bookCategory = computed(() => {
         <el-table ref="multipleTableRef" :data="tableData" :default-sort="{ prop: 'id', order: 'ascending' }"
             style="width: 100%" @selection-change="handleSelectionChange">
             <el-table-column type="selection" />
+            <el-table-column property="id" sortable label="ID" />
             <el-table-column property="name" label="Name" />
             <el-table-column property="author" label="Author" />
             <el-table-column property="publisher" label="Publisher" />
