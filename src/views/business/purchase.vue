@@ -5,6 +5,7 @@ import { deletePurchase, deletePurchaseDetail, getPurchaseDetailRefer, getPurcha
 import { ElMessage, ElTable } from 'element-plus';
 import { userStore } from '@/stores/user';
 import { vendorStore } from '@/stores/vendor';
+import bookListStore from '@/stores/book/bookList';
 
 
 const tableData = ref<PurchaseCreate[]>([])
@@ -59,6 +60,15 @@ const vendorSelect = computed(() => {
     })
 })
 
+const bookSelect = computed(() => {
+    const List = bookListStore.value;
+    return List.map((item: any) => {
+        return {
+            label: item.name,
+            value: item.id
+        }
+    })
+})
 
 onMounted(async () => {
     getPurchases();
@@ -368,8 +378,9 @@ const handleDetailOpenClick = async (row, expandedRows: any[]) => {
                 <el-form-item label="Purchase Detail ID">
                     <el-input v-model="purchaseDetailFrom.purchaseDetails!.id" disabled />
                 </el-form-item>
-                <el-form-item label="Purchase detail book Id">
-                    <el-input v-model.number="purchaseDetailFrom.purchaseDetails!.bookId" />
+                <el-form-item label="Purchase detail book">
+                    <el-tree-select v-model.number="purchaseDetailFrom.purchaseDetails!.bookId" :data="bookSelect"
+                        :render-after-expand="false" style="width: 240px" />
                 </el-form-item>
                 <el-form-item label="Purchase detail quantity">
                     <el-input v-model.number="purchaseDetailFrom.purchaseDetails!.quantity" />

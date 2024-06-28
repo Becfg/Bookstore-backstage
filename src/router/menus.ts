@@ -131,9 +131,31 @@ const routes = [
           showMenu: true,
           keepAlive: true
         }
+      },
+      {
+        path: '/business/dailyCounting',
+        name: 'dailyCounting',
+        component: () => import('@/views/business/dailyCounting.vue'),
+        meta: {
+          title: '日清',
+          icon: 'Sunny',
+          showMenu: true,
+          keepAlive: true
+        }
+      },
+      {
+        path: '/business/monthlyCounting',
+        name: 'monthlyCounting',
+        component: () => import('@/views/business/monthlyCounting.vue'),
+        meta: {
+          title: '月结',
+          icon: 'Moon',
+          showMenu: true,
+          keepAlive: true
+        }
       }
     ]
-  },
+  }, 
   {
     path: '/admin',
     name: 'admin',

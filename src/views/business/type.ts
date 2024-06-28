@@ -71,3 +71,43 @@ export interface PurchaseDetail {
   quantity: number
   [property: string]: any
 }
+
+
+/**
+ * Request
+ *
+ * dailyCounting
+ */
+export interface DailyCounting {
+  id?: number
+  date?: string
+  bookId: number
+  operatorId: number
+  countRealNumbers: number
+  yesterdayInventory?: number
+  todaySArrival?: number
+  saleToday?: number
+  currentInventory?: number
+  waxingAndWaning?: number
+  [property: string]: any
+}
+
+
+/**
+ * Request
+ *
+ * monthlyCounting
+ */
+export interface MonthlyCounting {
+  id?: number
+  month?: string
+  bookId: number
+  operatorId: number
+  countRealNumbers: number
+  currentInventory?: number
+  lastMonthInventory?: number
+  MonthSArrival?: number
+  saleOfTheMonth?: number
+  waxingAndWaning?: number
+  [property: string]: any
+}

@@ -106,7 +106,7 @@ const handleSelectionChange = (val: Vendor[]) => {
     <div class="vendor-list flex pa-5 flex-col gap-5">
         <div class="options">
             <el-button type="primary" @click="handleAdd">Add</el-button>
-            <el-button type="danger" @click="handleDelete">remove</el-button>
+            <el-button type="danger" @click="handleDelete">Remove</el-button>
         </div>
 
         <el-table ref="multipleTableRef" :data="tableData" style="width: 100%"

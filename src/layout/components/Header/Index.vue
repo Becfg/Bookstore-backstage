@@ -28,7 +28,7 @@
         <el-icon>
           <Avatar />
         </el-icon>
-        {{ 'userStore' }}
+        {{ userInfoStore?.username }}
       </template>
       <el-menu-item index="/user">个人中心</el-menu-item>
       <el-menu-item index="/login">退出</el-menu-item>
@@ -40,7 +40,7 @@
 import { ref } from 'vue'
 import { toggleCollapse, isCollapse } from '@/stores/collapse'
 import { toggleDark, isDark } from '@/stores/dark'
-import { userStore } from '@/stores/user'
+import { userInfoStore, userStore } from '@/stores/user'
 import Breadcrumb from '../Breadcrumb/Index.vue'
 import tokenStore from '@/stores/token'
 const activeIndex = ref('1')
@@ -48,6 +48,7 @@ const handleSelect = (key: string, keyPath: string[]) => {
   console.log(key, keyPath)
   if (key === '/login') {
     tokenStore.value = null;
+    userInfoStore.value = { username: '', password: '' };
   }
 }
 </script>

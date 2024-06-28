@@ -4,6 +4,7 @@ import { SaleCreate, SaleUpdate, SalesDetail, SalesDetails } from './type';
 import { deleteSale, deleteSaleDetail, getSaleDetailRefer, getSaleList, postSale, putSale } from '@/apis/business/sale';
 import { userStore } from '@/stores/user';
 import { ElMessage, ElTable } from 'element-plus';
+import bookListStore from '@/stores/book/bookList';
 
 const tableData = ref<SaleCreate[]>([])
 const saleFrom = ref<SaleCreate>({
@@ -46,6 +47,17 @@ const userSelect = computed(() => {
         }
     })
 })
+
+const bookSelect = computed(() => {
+    const List = bookListStore.value;
+    return List.map((item: any) => {
+        return {
+            label: item.name,
+            value: item.id
+        }
+    })
+})
+
 
 onMounted(async () => {
     getSales();
@@ -331,8 +343,9 @@ const handleDetailOpenClick = async (row, expandedRows: any[]) => {
                 <el-form-item label="Sale Detail ID">
                     <el-input v-model="saleDetailFrom.salesDetail!.id" disabled />
                 </el-form-item>
-                <el-form-item label="Sale detail book Id">
-                    <el-input v-model.number="saleDetailFrom.salesDetail!.bookId" />
+                <el-form-item label="Sale detail book">
+                    <el-tree-select v-model.number="saleDetailFrom.salesDetail!.bookId" :data="bookSelect"
+                        :render-after-expand="false" style="width: 240px" />
                 </el-form-item>
                 <el-form-item label="Sale detail quantity">
                     <el-input v-model.number="saleDetailFrom.salesDetail!.quantity" />

@@ -69,6 +69,7 @@ import { toggleDark, isDark } from '@/stores/dark'
 import { ElMessage, type FormInstance, type FormRules } from 'element-plus'
 import { getUser } from '@/apis/user';
 import token from '@/stores/token';
+import { userInfoStore } from '@/stores/user';
 
 const ruleFormRef = ref<FormInstance>()
 const router = useRouter()
@@ -102,7 +103,9 @@ const submitForm = (formEl: FormInstance | undefined) => {
       // console.log('Attempting to login with form:', ruleForm);
       const { success } = await getUser(ruleForm) as { success: boolean };
       console.log(success);
-
+      userInfoStore.value = {
+        username: ruleForm.username
+      }
       if (success) {
         router.push('/')
         return true;
