@@ -75,8 +75,8 @@ const sale: controller = {
 	
 	modifySaleInfo: async (req, res) => {
 		let {body} = req
-		let {salespersonId, date, salesDetail} = body
-		let {bookId, quantity, price} = salesDetail
+		let {salespersonId, date, salesDetail} = body ?? {}
+		let {bookId, quantity, price} = salesDetail ?? {}
 		date = date ? new Date(date) : undefined
 		
 		try {

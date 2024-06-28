@@ -77,8 +77,8 @@ const purchase: controller = {
 	
 	modifyPurchaseInfo: async (req, res) => {
 		let {body} = req
-		let {vendorId, operatorId, date, purchaseDetails} = body
-		let {bookId, quantity, price} = purchaseDetails
+		let {vendorId, operatorId, date, purchaseDetails} = body ?? {}
+		let {bookId, quantity, price} = purchaseDetails ?? {}
 		date = date ? new Date(date) : undefined
 		
 		try {
