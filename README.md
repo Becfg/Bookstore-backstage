@@ -1,4 +1,4 @@
 
 # Bookstore-backstage
-frontend-
-backend-
+- frontend
+- backend
